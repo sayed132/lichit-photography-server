@@ -67,6 +67,12 @@ async function run(){
             res.send(services)
         });
 
+        app.post('/reviews', async(req, res)=>{
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
+            res.send(result)
+        })
+
         // app.get('/reviews', verifyJWT, async(req, res)=>{
         //     const decoded = req.decoded;
         //     console.log('inside api', decoded);
