@@ -40,7 +40,7 @@ async function run(){
 
         app.post('/jwt', (req, res)=>{
             const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: 5});
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
             res.send({token})
         })
 
@@ -84,12 +84,12 @@ async function run(){
             res.send(result)
         })
 
-        app.get('/reviews', verifyJWT, async(req, res)=>{
-            const decoded = req.decoded;
-            console.log('inside api', decoded);
-            if(decoded.email !== req.query.email){
-                res.status(403).send({message: 'forbidden access'})
-            }
+        app.get('/reviews',  async(req, res)=>{
+            // const decoded = req.decoded;
+            // console.log('inside api', decoded);
+            // if(decoded.email !== req.query.email){
+            //     res.status(403).send({message: 'forbidden access'})
+            // }
             let query = {};
             if (req.query.email) {
                 query = {
@@ -101,9 +101,16 @@ async function run(){
             res.send(reviews)
         });
 
+        app.get('/reviews/update/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const reviews = await reviewsCollection.findOne(query);
+            res.send(reviews)
+        });
+
         
 
-        app.delete('/reviews/:id', verifyJWT, async (req, res) => {
+        app.delete('/reviews/:id',  async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await reviewsCollection.deleteOne(query);
