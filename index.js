@@ -46,14 +46,14 @@ async function run(){
 
         app.get('/services', async(req, res)=>{
             const query = {};
-            const cursor = servicesCollection.find(query);
+            const cursor = servicesCollection.find(query).sort({"_id": -01});
             const services = await cursor.toArray();
             res.send(services)
         });
 
         app.get('/servicesHome', async(req, res)=>{
             const query = {};
-            const cursor = servicesCollection.find(query);
+            const cursor = servicesCollection.find(query).sort({"_id": -01});
             const services = await cursor.limit(3).toArray();
             res.send(services)
         });
@@ -67,7 +67,7 @@ async function run(){
 
         app.get('/reviews/:id', async(req, res)=>{
             
-            const cursor =  reviewsCollection.find({service: req.params.id});
+            const cursor =  reviewsCollection.find({service: req.params.id}).sort({"_id": -01});
             const reviews = await cursor.toArray()
             res.send(reviews)
         });
@@ -78,7 +78,7 @@ async function run(){
             res.send(result)
         })
 
-        app.post('/reviews', verifyJWT, async(req, res)=>{
+        app.post('/reviews',  async(req, res)=>{
             const review = req.body;
             const result = await reviewsCollection.insertOne(review);
             res.send(result)
@@ -96,7 +96,7 @@ async function run(){
                     email: req.query.email
                 }
             }
-            const cursor = reviewsCollection.find(query);
+            const cursor = reviewsCollection.find(query).sort({"_id": -01});
             const reviews = await cursor.toArray();
             res.send(reviews)
         });
